@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="login-container">
+    <h1 class="title">Login to Access Calculator</h1>
+    <form id="loginForm">
+      <input type="text" id="username" placeholder="Username" required>
+      <input type="password" id="password" placeholder="Password" required>
+      <button type="submit">Login</button>
+    </form>
+    <p id="errorMessage" class="error-message"></p>
+  </div>
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+  
+      // Fetch credentials from the form
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+  
+      // Get members from localStorage
+      const members = JSON.parse(localStorage.getItem('members'));
+  
+      // Check if credentials are valid
+      const isValidUser = members.some(member => member.username === username && member.password === password);
+  
+      if (isValidUser) {
+        // Redirect to calculator page
+        window.location.href = 'calculator.html';
+      } else {
+        // Show error message
+        document.getElementById('errorMessage').textContent = 'Invalid username or password!';
+      }
+    });
+  </script>
+</body>
+</html>

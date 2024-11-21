@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Page</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="admin-container">
+    <h1 class="title">Admin Panel</h1>
+
+    <!-- Add Member Form -->
+    <form id="addMemberForm">
+      <input type="text" id="newUsername" placeholder="Enter username" required>
+      <input type="password" id="newPassword" placeholder="Enter password" required>
+      <button type="submit">Add Member</button>
+    </form>
+
+    <!-- Member List -->
+    <h2>Member List</h2>
+    <ul id="memberList"></ul>
+  </div>
+
+  <script>
+    // Initialize members in localStorage if not already present
+    if (!localStorage.getItem('members')) {
+      localStorage.setItem('members', JSON.stringify([
+        { username: 'user', password: '1234' } // Default member
+      ]));
+    }
+
+    // Fetch members from localStorage
+    const getMembers = () => JSON.parse(localStorage.getItem('members'));
+
+    // Render members in the list
+    const renderMembers = () => {
+      const members = getMembers();
+      const memberList = document.getElementById('memberList');
+      memberList.innerHTML = '';
+      members.forEach((member, index) => {
+        const li = document.createElement('li');
+        li.textContent = `Username: ${member.username}`;
+        const deleteButton = document.createElement('button');
+        deleteButton.textContent = 'Delete';
+        deleteButton.onclick = () => deleteMember(index);
+        li.appendChild(deleteButton);
+        memberList.appendChild(li);
+      });
+    };
+
+    // Add a new member
+    document.getElementById('addMemberForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const username = document.getElementById('newUsername').value;
+      const password = document.getElementById('newPassword').value;
+
+      const members = getMembers();
+      members.push({ username, password });
+      localStorage.setItem('members', JSON.stringify(members));
+      renderMembers();
+
+      // Clear form inputs
+      document.getElementById('newUsername').value = '';
+      document.getElementById('newPassword').value = '';
+    });
+
+    // Delete a member
+    const deleteMember = (index) => {
+      const members = getMembers();
+      members.splice(index, 1); // Remove member at index
+      localStorage.setItem('members', JSON.stringify(members));
+      renderMembers();
+    };
+
+    // Render members on page load
+    renderMembers();
+  </script>
+</body>
+</html>
